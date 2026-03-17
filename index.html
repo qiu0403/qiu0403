@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邱岚 · 副教授 · 个人简介</title>
+    <!-- 简洁商务风格，沉稳大方，无额外装饰干扰 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f2f5f9;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #1e2b3a;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-card {
+            max-width: 1100px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px -8px rgba(0,20,40,0.15), 0 5px 10px rgba(0,0,0,0.02);
+            overflow: hidden;
+            border: 1px solid #e9edf4;
+        }
+
+        .header-bar {
+            background: #1e2b3a;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #9b8c7c;
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .edit-controls {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid #6e8a9c;
+            color: #e0e9f0;
+            padding: 0.5rem 1.3rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 450;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-outline-light:hover {
+            background: #3e5a6f;
+            border-color: #8aa9c2;
+            color: white;
+        }
+
+        .password-dialog {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin: 1.5rem 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #dee5ed;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .password-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            flex: 3 1 300px;
+        }
+
+        .password-label {
+            font-weight: 500;
+            color: #2a4053;
+            font-size: 0.95rem;
+        }
+
+        .password-input {
+            flex: 2 1 250px;
+            padding: 0.7rem 1rem;
+            border: 1px solid #bcc9d6;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background-color: #f9fbfd;
+            transition: 0.2s;
+            font-family: monospace;
+        }
+
+        .password-input:focus {
+            border-color: #6e8a9c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(110,138,156,0.2);
+            background-color: #ffffff;
+        }
+
+        .btn-confirm {
+            background-color: #1e2b3a;
+            border: none;
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #1e2b3a;
+        }
+
+        .btn-confirm:hover {
+            background-color: #2f4053;
+        }
+
+        .message-hint {
+            color: #b83e3e;
+            font-size: 0.9rem;
+            font-weight: 450;
+            margin-left: 0.5rem;
+        }
+
+        .editor-area {
+            margin: 0 2rem 2rem 2rem;
+            border: 1px solid #dce3ec;
+            border-radius: 20px;
+            background: #fbfdff;
+            overflow: hidden;
+            box-shadow: inset 0 2px 3px rgba(0,0,0,0.02);
+        }
+
+        .edit-toolbar {
+            background: #edf2f7;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #cdd9e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .edit-toolbar span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e3b4f;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-save {
+            background-color: #1e2b3a;
+            border: none;
+            color: white;
+            padding: 0.4rem 1.8rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #1e2b3a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-save:hover {
+            background-color: #2f4053;
+        }
+
+        .btn-save:active {
+            transform: scale(0.97);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 2rem 1.8rem;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            border: none;
+            resize: vertical;
+            background-color: #ffffff;
+            color: #1e2b3a;
+            outline: none;
+            min-height: 650px;
+        }
+
+        .readonly-content {
+            padding: 2rem 2.2rem;
+            background-color: #ffffff;
+            font-size: 1rem;
+            color: #1e2b3a;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            line-height: 1.7;
+        }
+
+        .footer-note {
+            margin: 1rem 2rem 2rem 2rem;
+            font-size: 0.8rem;
+            color: #6e8196;
+            border-top: 1px solid #d4deea;
+            padding-top: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            background: #eaf0f8;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            color: #2f5777;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-card" id="appContainer">
+        <!-- 头部：仅保留姓名，删除副标题 -->
+        <div class="header-bar">
+            <div class="header-title">
+                <h1>邱岚</h1>
+            </div>
+            <div class="edit-controls">
+                <button class="btn btn-outline-light" id="enterEditModeBtn">✎ 编辑模式</button>
+            </div>
+        </div>
+
+        <!-- 密码验证面板 -->
+        <div id="passwordPanel" class="password-dialog hidden">
+            <div class="password-row">
+                <span class="password-label">输入密码：</span>
+                <input type="password" id="passwordInput" class="password-input" placeholder="········" value="">
+                <button class="btn-confirm" id="submitPasswordBtn">验证</button>
+                <span id="passwordMessage" class="message-hint"></span>
+            </div>
+            <div style="color:#4b637a; font-size:0.85rem;">提示：仅邱老师本人可编辑</div>
+        </div>
+
+        <!-- 核心内容区域 -->
+        <div id="dynamicContent"></div>
+
+        <!-- 底部：仅保留右侧状态 -->
+        <div class="footer-note">
+            <span></span>
+            <span class="status-badge">🔄 内容长期有效 · 点击编辑可更新</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 原始文本 (一字不差，完全保留) ----------
+            const ORIGINAL_TEXT = `邱岚，中共党员，文学博士
+毕业于四川大学文学与新闻学院比较文学与世界文学专业，硕士师从易丹教授，硕博连读，博士师从曹顺庆教授。2009年获得博士学位，被评为四川大学2009届优秀毕业研究生。 
+成都大学文学与新闻学院副教授，硕士生导师，“一带一路”中心兼职研究员、张澜学院荣誉导师。研究方向为外国文学、比较文学、海外华文文学(美国华裔文学)。 
+中国世界华文文学学会会员(国家一级学术团体)，《河南科技学院学报》首届评审库专家
+课程教学:本科课程--外国文学、比较文学(中英文双语课)、现当代文学、中国文学专题(2)、海外华文文学、国学、西方现代哲学与艺术、影视文学、西方艺术史、世界电影鉴赏(张澜学院课程)、世界电影艺术(跨学科课程)、西方艺术与电影导读(跨学科课程)等；研究生课程--海外华文文学研究(中英文双语课)；学堂在线国际版课程-Chinese American Literature (美国华裔文学/全英文课程)。2012年成都大学“ 1315”青年骨干教师，2014年院级青年教师教学竞赛一等奖/校级教学竞赛二等奖。 
+科研成果:发表多篇期刊论文(含CSSC与北核期刊)，代表作有《中国历史古装片:历史意识与现代意识的双重关照》、《历史传统的现代独白》、《历史与现实交织下的人性探寻》、《王颖电影中的中国文化情结:以<喜福会><干年敬祈>为例》、《美国华裔小说中的两性形象研究:以华裔小说American Knees,Monkey King,Hunger为例》、《基于“问题式”教学法的高校海外华文文学课程教学改革与实践》等。科研项目: 独立负责四川省哲社项目《格林布拉特诗学思想研究》(结题优秀)、四川省哲社项目《新历史主义在中国》(结题良好)、省部共建协同创新中心成都大学文明互鉴与“一带一路”研究分中心项目《“一带一路”互鉴下的美国华裔小说研究》(在研)、教育部产学研项目《基于“问题式”教学法的高校海外华文文学课程教学改革与实践》(结题)、教育部产学研项目《新文科背景下基于比较文学与世界文学专业教学质量提升研究》(结题)。参与国家社会科学基金规划项目《中外文论比较研究》、《比较文学变异学理论研究》、教育部首批新文科研究与改革实践项目《立德树人、传承文明》。专著《格林布拉特诗学思想研究》获得成都市第十一次社会科学优秀成果奖三等奖。2019年赴美国新罕布什尔大学英文系访问学习。`;
+
+            // ---------- 持久化存储 ----------
+            const STORAGE_KEY = 'qiulan_profile_content';
+
+            // 尝试从 localStorage 读取已保存的内容，如果没有则使用原始文本
+            function loadSavedContent() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved !== null && saved !== '') {
+                        return saved;  // 返回用户编辑后保存的内容
+                    }
+                } catch (e) {
+                    console.warn('读取本地存储失败', e);
+                }
+                return ORIGINAL_TEXT; // 默认返回原始文本
+            }
+
+            // 保存内容到 localStorage
+            function saveContentToStorage(text) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, text);
+                } catch (e) {
+                    console.warn('保存到本地存储失败', e);
+                }
+            }
+
+            // 当前内容始终从 storage 加载 (初始化)
+            let currentContent = loadSavedContent();
+
+            // 编辑模式状态
+            let editModeActive = false;
+
+            // DOM 元素
+            const elPasswordPanel = document.getElementById('passwordPanel');
+            const btnEnterEditMode = document.getElementById('enterEditModeBtn');
+            const passwordInput = document.getElementById('passwordInput');
+            const btnSubmit = document.getElementById('submitPasswordBtn');
+            const passwordMsg = document.getElementById('passwordMessage');
+            const dynamicContainer = document.getElementById('dynamicContent');
+
+            // 渲染视图
+            function renderView() {
+                if (editModeActive) {
+                    // 编辑模式: 显示编辑器，内容为 currentContent
+                    dynamicContainer.innerHTML = `
+                        <div class="editor-area">
+                            <div class="edit-toolbar">
+                                <span>✏️ 您正在编辑邱岚老师简介（可无限次修改，点击保存即时更新）</span>
+                                <button class="btn-save" id="saveContentBtn">保存修改</button>
+                            </div>
+                            <textarea id="contentEditor">${escapeHtml(currentContent)}</textarea>
+                        </div>
+                    `;
+                    // 绑定保存事件
+                    const saveBtn = document.getElementById('saveContentBtn');
+                    const textarea = document.getElementById('contentEditor');
+                    if (saveBtn && textarea) {
+                        saveBtn.addEventListener('click', function() {
+                            // 更新内存中的内容
+                            currentContent = textarea.value;
+                            // 持久化到 localStorage
+                            saveContentToStorage(currentContent);
+                            // 重新渲染（保持编辑模式）
+                            renderView();
+                            // 提示保存成功
+                            passwordMsg.innerText = '✓ 内容已保存';
+                            setTimeout(() => { passwordMsg.innerText = ''; }, 2000);
+                        });
+                    }
+                } else {
+                    // 只读模式: 显示 currentContent (可能已被编辑过)
+                    dynamicContainer.innerHTML = `
+                        <div class="readonly-content">${formatReadonly(currentContent)}</div>
+                    `;
+                }
+            }
+
+            // 格式化只读视图（转义+保留空白）
+            function formatReadonly(text) {
+                return `<div style="white-space: pre-wrap; font-family: inherit;">${escapeHtml(text)}</div>`;
+            }
+
+            // 转义 HTML 特殊字符
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"]/g, function(m) {
+                    if(m === '&') return '&amp;';
+                    if(m === '<') return '&lt;';
+                    if(m === '>') return '&gt;';
+                    if(m === '"') return '&quot;';
+                    return m;
+                });
+            }
+
+            // 隐藏密码面板
+            function hidePasswordPanel() {
+                elPasswordPanel.classList.add('hidden');
+                passwordInput.value = '';
+                passwordMsg.innerText = '';
+            }
+
+            // 显示密码面板
+            function showPasswordPanel() {
+                elPasswordPanel.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordMsg.innerText = '';
+                passwordInput.focus();
+            }
+
+            // 点击“编辑模式”按钮
+            btnEnterEditMode.addEventListener('click', function() {
+                showPasswordPanel();
+            });
+
+            // 提交密码验证
+            btnSubmit.addEventListener('click', function() {
+                const pwd = passwordInput.value;
+                if (pwd === 'cduqiulanlaoshi') {
+                    editModeActive = true;
+                    passwordMsg.innerText = '';
+                    hidePasswordPanel();
+                    renderView();  // 进入编辑模式
+                } else {
+                    editModeActive = false;
+                    passwordMsg.innerText = '密码错误，仅查看';
+                    renderView();  // 刷新为只读（但内容不变）
+                    // 面板保持显示，以便再次尝试
+                }
+            });
+
+            // 回车提交
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    btnSubmit.click();
+                }
+            });
+
+            // 初始化渲染 (只读模式, 但显示的是已经持久化的内容)
+            renderView();
+
+            // 附加: 如果有多个标签页同时操作，storage事件可保持同步 (可选增强)
+            window.addEventListener('storage', function(e) {
+                if (e.key === STORAGE_KEY) {
+                    // 其他标签页修改了存储，重新加载内容并更新视图
+                    const newContent = e.newValue;
+                    if (newContent !== null && newContent !== currentContent) {
+                        currentContent = newContent;
+                        // 如果当前不在编辑模式，刷新只读视图；如果在编辑模式，询问或刷新? 简单起见，如果编辑模式且内容被外部修改，我们提醒但保留编辑区未保存内容？为安全，当编辑模式时不做自动刷新，避免丢失编辑。
+                        if (!editModeActive) {
+                            renderView();
+                        } else {
+                            // 可以简单提示，但为了不干扰编辑，暂不处理
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
