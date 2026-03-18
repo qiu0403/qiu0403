@@ -312,12 +312,29 @@
 
 2019年赴美国新罕布什尔大学英文系访问学习。`;
 
-            // ---------- 新的Gist ID (用您的Token创建) ----------
-            const GIST_ID = '6d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a';
-            // 您的Token
-            const GIST_TOKEN = 'ghp_3bx0scVQo0FvK7b0kuHPATNpdbuGZb31kqZ7';
+            // ---------- 改用localStorage（最简单，不需要Token） ----------
+            const STORAGE_KEY = 'qiulan_profile_content';
             
-            let currentContent = ORIGINAL_TEXT;
+            // 尝试从localStorage读取，没有就用原始文本
+            function loadSavedContent() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) return saved;
+                } catch (e) {}
+                return ORIGINAL_TEXT;
+            }
+
+            // 保存到localStorage
+            function saveContent(content) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, content);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            let currentContent = loadSavedContent();
             let editModeActive = false;
 
             const elPasswordPanel = document.getElementById('passwordPanel');
@@ -326,89 +343,6 @@
             const btnSubmit = document.getElementById('submitPasswordBtn');
             const passwordMsg = document.getElementById('passwordMessage');
             const dynamicContainer = document.getElementById('dynamicContent');
-
-            // 从Gist加载内容
-            async function loadFromGist() {
-                try {
-                    const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
-                    if (response.status === 404) {
-                        // Gist不存在，创建新的
-                        await createNewGist();
-                        return ORIGINAL_TEXT;
-                    }
-                    if (!response.ok) throw new Error('加载失败');
-                    const gist = await response.json();
-                    const files = gist.files;
-                    const firstFile = Object.keys(files)[0];
-                    const content = files[firstFile].content;
-                    return content || ORIGINAL_TEXT;
-                } catch (e) {
-                    console.warn('从Gist加载失败，使用默认内容', e);
-                    return ORIGINAL_TEXT;
-                }
-            }
-
-            // 创建新的Gist
-            async function createNewGist() {
-                try {
-                    const response = await fetch('https://api.github.com/gists', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `token ${GIST_TOKEN}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            description: '邱岚教授简介',
-                            public: true,
-                            files: {
-                                'profile.txt': {
-                                    content: ORIGINAL_TEXT
-                                }
-                            }
-                        })
-                    });
-                    if (!response.ok) throw new Error('创建失败');
-                    const gist = await response.json();
-                    alert(`Gist创建成功！ID: ${gist.id}\n请把代码中的GIST_ID改成这个新ID`);
-                    console.log('新Gist ID:', gist.id);
-                } catch (e) {
-                    console.error('创建Gist失败', e);
-                }
-            }
-
-            // 保存内容到Gist
-            async function saveToGist(content) {
-                try {
-                    const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `token ${GIST_TOKEN}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            files: {
-                                'profile.txt': {
-                                    content: content
-                                }
-                            }
-                        })
-                    });
-                    if (!response.ok) throw new Error('保存失败');
-                    return true;
-                } catch (e) {
-                    console.error('保存失败', e);
-                    alert('保存失败，正在尝试创建新Gist...');
-                    await createNewGist();
-                    return false;
-                }
-            }
-
-            // 初始化加载
-            async function init() {
-                dynamicContainer.innerHTML = '<div class="loading">加载中...</div>';
-                currentContent = await loadFromGist();
-                renderView();
-            }
 
             // 渲染视图
             function renderView() {
@@ -425,14 +359,13 @@
                     const saveBtn = document.getElementById('saveContentBtn');
                     const textarea = document.getElementById('contentEditor');
                     if (saveBtn && textarea) {
-                        saveBtn.addEventListener('click', async function() {
+                        saveBtn.addEventListener('click', function() {
                             const newContent = textarea.value;
-                            const success = await saveToGist(newContent);
-                            if (success) {
+                            if (saveContent(newContent)) {
                                 currentContent = newContent;
                                 editModeActive = false;
                                 renderView();
-                                alert('保存成功！所有人刷新页面后都能看到新内容。');
+                                alert('保存成功！\n\n注意：因为使用本地存储，别人打开看不到更新。\n如需让所有人可见，请重新上传HTML文件到GitHub。');
                             }
                         });
                     }
@@ -494,7 +427,7 @@
             });
 
             // 启动
-            init();
+            renderView();
         })();
     </script>
 </body>
